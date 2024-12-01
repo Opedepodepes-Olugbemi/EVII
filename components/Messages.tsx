@@ -24,10 +24,21 @@ const Messages = forwardRef<
   const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   useEffect(() => {
-    const assistantMessages = messages.filter(msg => msg.type === "assistant_message");
+    const assistantMessages = messages.filter(
+      (msg) => msg.type === "assistant_message"
+    );
     const latestMessage = assistantMessages[assistantMessages.length - 1];
 
-    if (!latestMessage?.message?.content) return;
+    // Type guard to check if the message has the expected structure
+    const hasMessageContent = (msg: any): msg is { 
+      type: string; 
+      message: { content: string }; 
+      models?: { prosody?: { scores: Record<string, number> } } 
+    } => {
+      return msg?.message?.content !== undefined;
+    };
+
+    if (!hasMessageContent(latestMessage)) return;
 
     const newMessageId = latestMessage.type + messages.length;
     

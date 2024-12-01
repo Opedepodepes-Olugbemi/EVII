@@ -28,18 +28,20 @@ export default function Controls({
   };
 
   return (
-    <div className="flex justify-center items-start gap-4">
+    <div className="flex justify-center items-center gap-4 right-40 mb-12">
       <Button
-        variant="default"
+        variant="outline"
         size="icon"
-        className={`rounded-full w-12 h-12 transition-opacity ${!isEnabled && !isRecording ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`rounded-full w-12 h-12 transition-opacity flex items-center justify-center
+          ${!isEnabled && !isRecording ? 'opacity-50 cursor-not-allowed' : ''}
+          bg-secondary`}
         onClick={handleToggle}
         disabled={!isEnabled && !isRecording}
       > 
         {isRecording ? (
-          <MicOff className="w-6 h-6" />
+          <MicOff className="w-5 h-5" />
         ) : (
-          <Mic className="w-6 h-6" />
+          <Mic className="w-5 h-5" />
         )}
       </Button>
     </div>

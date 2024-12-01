@@ -11,6 +11,7 @@
   "dependencies": {
     "@humeai/voice-react": "0.1.15",
     "@radix-ui/react-dialog": "1.1.2",
+    "@radix-ui/react-toggle": "^1.0.3",
     "@splinetool/runtime": "1.9.46",
     "class-variance-authority": "0.7.0",
     "framer-motion": "11.5.4",
@@ -20,6 +21,7 @@
     "next": "14.2.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-virtualized": "^9.22.5",
     "remeda": "2.12.0",
     "tailwind-merge": "^2.2.1"
   },
@@ -27,6 +29,7 @@
     "@types/node": "20.11.24",
     "@types/react": "18.2.61",
     "@types/react-dom": "18.2.19",
+    "@types/react-virtualized": "^9.21.29",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
