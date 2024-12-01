@@ -21,18 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
 # local env files
-.env*.local
 .env
+.env*.local
 
 # vercel
 .vercel
-
-elevator-pitch.txt
-
-project-story.md
 
 # typescript
 *.tsbuildinfo

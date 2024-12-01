@@ -6,16 +6,12 @@ import ClientChat from "./page.client";
 import { redirect } from "next/navigation";
 
 export default async function ChatPage() {
-  try {
-    const accessToken = await getHumeAccessToken();
+  const accessToken = await getHumeAccessToken();
 
-    if (!accessToken) {
-      redirect('/');
-    }
-
-    return <ClientChat accessToken={accessToken} />;
-  } catch (error) {
-    console.error('Failed to get access token:', error);
+  if (!accessToken) {
+    console.error('No access token available');
     redirect('/');
   }
+
+  return <ClientChat accessToken={accessToken} />;
 } 
