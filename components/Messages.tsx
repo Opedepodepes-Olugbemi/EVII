@@ -4,6 +4,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ComponentRef, forwardRef, useState, useEffect, useRef } from "react";
 import Expressions from "./Expressions";
 
+type EmotionScores = {
+  [key: string]: number;
+};
+
 interface VisibleMessage {
   content: string;
   id: string;

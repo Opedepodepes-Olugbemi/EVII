@@ -122,3 +122,19 @@ The changes ensure that:
 Latest fix - Type assertion for expressions:
 1. Added type assertion to convert EmotionScores to Record<string, number>
 2. Used fallback empty object with type assertion for null/undefined cases
+
+Latest fix - Added proper type definitions:
+1. Added EmotionScores type definition with string index signature
+2. This ensures compatibility between EmotionScores and Record<string, number>
+3. Package manager (pnpm) is working correctly - issue was with types
+
+Package Manager Consistency Fix:
+1. Project was set up with pnpm, should continue using pnpm
+2. Mixing package managers (npm vs pnpm) can cause:
+   - Slower builds
+   - Dependency resolution issues
+   - Lock file conflicts
+3. Solution:
+   - Remove node_modules and lock files
+   - Reinstall with pnpm
+   - Use pnpm for all commands
