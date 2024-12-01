@@ -1,12 +1,21 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { getHumeAccessToken } from "@/utils/getHumeAccessToken";
 import ClientChat from "./page.client";
+import { redirect } from "next/navigation";
 
 export default async function ChatPage() {
-  const accessToken = await getHumeAccessToken();
+  try {
+    const accessToken = await getHumeAccessToken();
 
-  if (!accessToken) {
-    throw new Error("No access token");
+    if (!accessToken) {
+      redirect('/');
+    }
+
+    return <ClientChat accessToken={accessToken} />;
+  } catch (error) {
+    console.error('Failed to get access token:', error);
+    redirect('/');
   }
-
-  return <ClientChat accessToken={accessToken} />;
 } 

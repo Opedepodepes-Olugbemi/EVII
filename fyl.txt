@@ -151,3 +151,41 @@ Changes ensure:
 - No content mismatch during hydration
 - Proper theme initialization
 - Clean initial render state
+
+Access Token Build Error Fix:
+1. Made chat page dynamic with 'force-dynamic' directive
+2. Added revalidate=0 to prevent caching
+3. Improved error handling:
+   - Added try-catch block
+   - Redirects to home on error
+   - Proper error logging
+4. Prevents build-time pre-rendering issues
+5. Ensures access token is handled at runtime
+
+Deployment Steps:
+1. Environment Cleanup:
+   - Remove node_modules
+   - Remove lock files
+   - Clear caches
+
+2. Fresh Installation:
+   - Use pnpm exclusively
+   - Install dependencies
+   - Verify package versions
+
+3. Build Process:
+   - Local build test
+   - Environment variable setup
+   - Vercel configuration
+
+4. Deployment:
+   - Push changes
+   - Monitor build logs
+   - Clear build cache if needed
+
+Key Points:
+- Use pnpm consistently
+- Verify environment variables
+- Test locally before deploying
+- Monitor build process
+- Clear cache if issues persist
