@@ -23,26 +23,23 @@ const Messages = forwardRef<
     const assistantMessages = messages.filter(msg => msg.type === "assistant_message");
     const latestMessage = assistantMessages[assistantMessages.length - 1];
 
-    if (latestMessage) {
+    if (latestMessage && latestMessage.message.content) {
       const newMessageId = latestMessage.type + messages.length;
       
-      // Clear timer for previous message if exists
       if (timersRef.current.has(newMessageId)) {
         clearTimeout(timersRef.current.get(newMessageId));
       }
 
-      // Add new message
       setVisibleMessages(prev => [
-        ...prev.map(msg => ({ ...msg, shouldShow: false })), // Hide previous messages
+        ...prev.map(msg => ({ ...msg, shouldShow: false })),
         {
           content: latestMessage.message.content,
           id: newMessageId,
-          expressions: latestMessage.models.prosody?.scores,
+          expressions: latestMessage.models.prosody?.scores || {},
           shouldShow: true
         }
       ]);
 
-      // Set timer to hide message
       const timer = setTimeout(() => {
         setVisibleMessages(prev => 
           prev.map(msg => 
