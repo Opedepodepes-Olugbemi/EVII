@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Moon, Sun, Menu } from "lucide-react";
 import Github from "./logos/GitHub";
@@ -12,17 +12,33 @@ interface NavProps {
 }
 
 export const Nav = ({ children, accessToken }: NavProps) => {
+  const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setMounted(true);
     const el = document.documentElement;
     if (el.classList.contains("dark")) {
       setIsDarkMode(true);
-    } else {
-      setIsDarkMode(false);
     }
   }, []);
+
+  if (!mounted) {
+    return (
+      <nav className="fixed top-0 w-full border-b border-mirage/10 bg-chalk/80 backdrop-blur-md dark:bg-mirage/80 dark:border-chalk/10 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-14">
+            <div className="flex items-center">
+              <span className="text-sm font-medium text-mirage dark:text-chalk">
+                EVII
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const toggleDark = () => {
     const el = document.documentElement;
@@ -36,7 +52,7 @@ export const Nav = ({ children, accessToken }: NavProps) => {
         <div className="flex items-center justify-between h-14">
           <div className="flex items-center">
             <span className="text-sm font-medium text-mirage dark:text-chalk">
-              kizuna
+              EVII
             </span>
           </div>
 
