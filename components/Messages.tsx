@@ -23,40 +23,47 @@ const Messages = forwardRef<
     const assistantMessages = messages.filter(msg => msg.type === "assistant_message");
     const latestMessage = assistantMessages[assistantMessages.length - 1];
 
-    if (latestMessage?.message?.content) {
-      const newMessageId = latestMessage.type + messages.length;
-      
-      if (timersRef.current.has(newMessageId)) {
-        clearTimeout(timersRef.current.get(newMessageId));
-      }
+    if (!latestMessage?.message?.content) return;
 
-      const newMessage: VisibleMessage = {
-        content: latestMessage.message.content,
-        id: newMessageId,
-        expressions: (latestMessage.models.prosody?.scores as unknown as Record<string, number>) || {},
-        shouldShow: true
-      };
-
-      const updatedMessages: VisibleMessage[] = [
-        ...visibleMessages.map(msg => ({ ...msg, shouldShow: false } as VisibleMessage)),
-        newMessage
-      ];
-      
-      setVisibleMessages(updatedMessages);
-
-      const timer = setTimeout(() => {
-        setVisibleMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessageId ? { ...msg, shouldShow: false } : msg
-          )
-        );
-      }, 3000);
-
-      timersRef.current.set(newMessageId, timer);
+    const newMessageId = latestMessage.type + messages.length;
+    
+    // Clear existing timer
+    if (timersRef.current.has(newMessageId)) {
+      clearTimeout(timersRef.current.get(newMessageId));
     }
 
+    // Create new message
+    const newMessage: VisibleMessage = {
+      content: latestMessage.message.content,
+      id: newMessageId,
+      expressions: (latestMessage.models.prosody?.scores || {}) as Record<string, number>,
+      shouldShow: true
+    };
+
+    // Hide previous messages
+    const oldMessages = visibleMessages.map(msg => ({
+      ...msg,
+      shouldShow: false
+    }));
+
+    // Update state with type safety
+    setVisibleMessages([...oldMessages, newMessage]);
+
+    // Set timer to hide new message
+    const timer = setTimeout(() => {
+      setVisibleMessages(currentMessages => 
+        currentMessages.map(msg => 
+          msg.id === newMessageId 
+            ? { ...msg, shouldShow: false }
+            : msg
+        )
+      );
+    }, 3000);
+
+    timersRef.current.set(newMessageId, timer);
+
     return () => {
-      timersRef.current.forEach(timer => clearTimeout(timer));
+      timersRef.current.forEach(clearTimeout);
     };
   }, [messages]);
 
