@@ -37,9 +37,12 @@ const Messages = forwardRef<
         shouldShow: true
       };
 
-      setVisibleMessages(prev => 
-        [...prev.map(msg => ({ ...msg, shouldShow: false } as VisibleMessage)), newMessage]
-      );
+      const updatedMessages: VisibleMessage[] = [
+        ...visibleMessages.map(msg => ({ ...msg, shouldShow: false } as VisibleMessage)),
+        newMessage
+      ];
+      
+      setVisibleMessages(updatedMessages);
 
       const timer = setTimeout(() => {
         setVisibleMessages(prev => 
