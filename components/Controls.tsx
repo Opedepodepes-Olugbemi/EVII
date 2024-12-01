@@ -28,14 +28,14 @@ export default function Controls({
   };
 
   return (
-    <div className="flex justify-center items-center gap-4">
+    <div className="flex justify-center items-start gap-4">
       <Button
-        variant="ghost"
+        variant="default"
         size="icon"
         className={`rounded-full w-12 h-12 transition-opacity ${!isEnabled && !isRecording ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={handleToggle}
         disabled={!isEnabled && !isRecording}
-      >
+      > 
         {isRecording ? (
           <MicOff className="w-6 h-6" />
         ) : (

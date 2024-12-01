@@ -1,51 +1,41 @@
 "use client";
 
 import { VoiceProvider } from "@humeai/voice-react";
-import Controls from "./Controls";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { SplineViewer } from "./SplineViewer";
 import { Footer } from "./Footer";
 import { Nav } from "./Nav";
-import { VoiceCommand } from "./VoiceCommand";
 import Expressions from "./Expressions";
+import { Button } from "./ui/button";
 
 export default function ClientComponent({
   accessToken,
 }: {
   accessToken: string;
 }) {
-  const timeout = useRef<number | null>(null);
   const configId = process.env['NEXT_PUBLIC_HUME_CONFIG_ID'];
-  const [isCallEnabled, setIsCallEnabled] = useState(false);
-  const [isCallActive, setIsCallActive] = useState(false);
+  const [isSessionStarted, setIsSessionStarted] = useState(false);
   
   return (
     <div className="relative h-screen w-full">
       <SplineViewer />
-      <Nav accessToken={accessToken}>
-        {/* <ChatDrawer accessToken={accessToken} /> */}
-      </Nav>
-      <VoiceCommand 
-        onWakeWord={() => setIsCallEnabled(true)}
-        isCallActive={isCallActive}
-      />
+      <Nav accessToken={accessToken} />
+      
       <VoiceProvider
         auth={{ type: "accessToken", value: accessToken }}
         configId={configId}
       >
-        <div className="absolute inset-0 z-10 flex flex-col pointer-events-none">
-          <div className="p-4 mt-auto pointer-events-auto">
-            <Controls 
-              onStopListening={() => {
-                setIsCallActive(false);
-                setIsCallEnabled(false);
-              }}
-              isEnabled={isCallEnabled}
-              onStartListening={() => setIsCallActive(true)}
-            />
-          </div>
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+          <Button 
+            variant="outline"
+            size="lg"
+            onClick={() => setIsSessionStarted(true)}
+            className="bg-black text-white hover:bg-black/90 px-8 py-6 text-lg"
+          >
+            {isSessionStarted ? 'Session Started' : 'Start Session'}
+          </Button>
         </div>
-        <Expressions />
+        {isSessionStarted && <Expressions />}
       </VoiceProvider>
       <Footer />
     </div>

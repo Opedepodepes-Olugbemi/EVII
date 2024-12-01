@@ -4,7 +4,6 @@ import { VoiceProvider } from "@humeai/voice-react";
 import { SplineViewer } from "@/components/SplineViewer";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { VoiceCommand } from "@/components/VoiceCommand";
 import Messages from "@/components/Messages";
 import Controls from "@/components/Controls";
 import { useState } from "react";

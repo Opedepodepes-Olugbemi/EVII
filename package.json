@@ -27,6 +27,7 @@
     "next": "^14.2.3 || ^15.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-type-animation": "^3.2.0",
     "react-virtualized": "^9.22.5",
     "remeda": "^2.0.9",
     "server-only": "^0.0.1",

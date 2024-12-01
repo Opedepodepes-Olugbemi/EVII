@@ -16,26 +16,31 @@ export function ChatDrawer({ accessToken }: { accessToken: string }) {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm" 
-          className="flex items-center gap-2"
+          className="bg-white text-black hover:bg-white/90 flex items-center gap-2 border-0"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Convos</span>
+          <span>Messages</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[400px] sm:w-[540px] p-0">
-        <VoiceProvider
-          auth={{ type: "accessToken", value: accessToken }}
-          configId={configId}
+      {isOpen && (
+        <SheetContent 
+          side="right" 
+          className="w-[400px] sm:w-[540px] p-0 bg-white border-l shadow-lg"
         >
-          <div className="h-full flex flex-col">
-            <div className="flex-1 overflow-y-auto p-4">
-              <Messages ref={ref} />
+          <VoiceProvider
+            auth={{ type: "accessToken", value: accessToken }}
+            configId={configId}
+          >
+            <div className="h-full flex flex-col">
+              <div className="flex-1 overflow-y-auto p-4">
+                <Messages ref={ref} />
+              </div>
             </div>
-          </div>
-        </VoiceProvider>
-      </SheetContent>
+          </VoiceProvider>
+        </SheetContent>
+      )}
     </Sheet>
   );
 } 
