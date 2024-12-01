@@ -32,9 +32,9 @@ const Messages = forwardRef<
       clearTimeout(timersRef.current.get(newMessageId));
     }
 
-    // Create new message
+    // Create new message with fallback for content
     const newMessage: VisibleMessage = {
-      content: latestMessage.message.content,
+      content: latestMessage.message.content || "", // Ensuring content is always a string
       id: newMessageId,
       expressions: (latestMessage.models.prosody?.scores || {}) as Record<string, number>,
       shouldShow: true
