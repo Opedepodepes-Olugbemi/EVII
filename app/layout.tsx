@@ -6,8 +6,8 @@ import { Nav } from "@/components/Nav";
 import { cn } from "@/utils";
 
 export const metadata: Metadata = {
-  title: "Kizuna",
-  description: "Kizuna is an emotional conversational bot",
+  title: "EVII",
+  description: "EVII is an emotional conversational bot",
 };
 
 export default function RootLayout({
