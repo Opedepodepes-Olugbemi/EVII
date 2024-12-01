@@ -3,7 +3,6 @@ import { useVoice } from "@humeai/voice-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ComponentRef, forwardRef, useState, useEffect, useRef } from "react";
 import Expressions from "./Expressions";
-import type { EmotionScores } from "hume/api/resources/empathicVoice/types";
 
 interface VisibleMessage {
   content: string;
@@ -26,19 +25,21 @@ const Messages = forwardRef<
 
     if (latestMessage?.message?.content) {
       const newMessageId = latestMessage.type + messages.length;
-      const scores = (latestMessage.models.prosody?.scores || {}) as Record<string, number>;
       
+      if (timersRef.current.has(newMessageId)) {
+        clearTimeout(timersRef.current.get(newMessageId));
+      }
+
       const newMessage: VisibleMessage = {
         content: latestMessage.message.content,
         id: newMessageId,
-        expressions: scores,
+        expressions: (latestMessage.models.prosody?.scores as unknown as Record<string, number>) || {},
         shouldShow: true
       };
 
-      setVisibleMessages(prev => [
-        ...prev.map(msg => ({ ...msg, shouldShow: false })),
-        newMessage
-      ]);
+      setVisibleMessages(prev => 
+        [...prev.map(msg => ({ ...msg, shouldShow: false } as VisibleMessage)), newMessage]
+      );
 
       const timer = setTimeout(() => {
         setVisibleMessages(prev => 
