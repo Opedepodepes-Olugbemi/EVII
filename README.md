@@ -52,4 +52,4 @@ MIT License - Feel free to use and modify while maintaining attribution.
 
 ---
 
-Made with ❤️ by EVII | Powered by [Hume AI](https://hume.ai)
+Made with ❤️ by Olugbemi Tolulope EVII | Powered by [Hume AI](https://hume.ai)
