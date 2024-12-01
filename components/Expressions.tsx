@@ -1,70 +1,86 @@
 "use client";
-import { expressionColors, isExpressionColor } from "@/utils/expressionColors";
 import { expressionLabels } from "@/utils/expressionLabels";
-import { motion } from "framer-motion";
-import { CSSProperties } from "react";
 import * as R from "remeda";
+import { useVoice } from "@humeai/voice-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 
-export default function Expressions({
-  values,
-}: {
-  values: Record<string, number>;
-}) {
-  const top3 = R.pipe(
-    values,
-    R.entries(),
-    R.sortBy(R.pathOr([1], 0)),
-    R.reverse(),
-    R.take(3)
-  );
+interface ExpressionsProps {
+  values?: Record<string, number>;
+}
+
+export default function Expressions({ values = {} }: ExpressionsProps) {
+  const { status } = useVoice();
+  const [displayExpressions, setDisplayExpressions] = useState<[string, number][]>([]);
+  const [shouldShow, setShouldShow] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout>();
+
+  const liveValues = status.value === "connected" && "predictions" in status 
+    ? (status.predictions as { emotions: Record<string, number> })?.emotions || {}
+    : {};
+
+  const currentValues = Object.keys(values).length > 0 ? values : liveValues;
+
+  useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    const top3 = R.pipe(
+      currentValues,
+      R.entries(),
+      R.sortBy(R.pathOr([1], 0)),
+      R.reverse(),
+      R.take(3)
+    );
+
+    // Hide current expression if showing
+    setShouldShow(false);
+
+    // Wait for fade out animation
+    setTimeout(() => {
+      setDisplayExpressions(top3);
+      setShouldShow(true);
+
+      // Set timer to hide after 5 seconds
+      timerRef.current = setTimeout(() => {
+        setShouldShow(false);
+      }, 2000);
+    }, 400);
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [JSON.stringify(currentValues)]);
 
   return (
-    <div
-      className={
-        "text-xs p-3 w-full border-t border-border flex flex-col md:flex-row gap-3"
-      }
-    >
-      {top3.map(([key, value]) => (
-        <div key={key} className={"w-full overflow-hidden"}>
-          <div
-            className={"flex items-center justify-between gap-1 font-mono pb-1"}
+    <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2">
+      <AnimatePresence>
+        {shouldShow && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 py-2 rounded-lg bg-chalk/80 dark:bg-mirage/80 backdrop-blur-md border border-mirage/10 dark:border-chalk/10"
           >
-            <div className={"font-medium truncate"}>
-              {expressionLabels[key]}
+            <div className="flex gap-3">
+              {displayExpressions.map(([key, value]) => (
+                <div key={key} className="text-sm">
+                  <span className="font-medium text-mirage dark:text-chalk">
+                    {expressionLabels[key]}
+                  </span>
+                  <span className="ml-2 opacity-50">
+                    {(value * 100).toFixed(0)}%
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className={"tabular-nums opacity-50"}>{value.toFixed(2)}</div>
-          </div>
-          <div
-            className={"relative h-1"}
-            style={
-              {
-                "--bg": isExpressionColor(key)
-                  ? expressionColors[key]
-                  : "var(--bg)",
-              } as CSSProperties
-            }
-          >
-            <div
-              className={
-                "absolute top-0 left-0 size-full rounded-full opacity-10 bg-[var(--bg)]"
-              }
-            />
-            <motion.div
-              className={
-                "absolute top-0 left-0 h-full bg-[var(--bg)] rounded-full"
-              }
-              initial={{ width: 0 }}
-              animate={{
-                width: `${R.pipe(
-                  value,
-                  R.clamp({ min: 0, max: 1 }),
-                  (value) => `${value * 100}%`
-                )}`,
-              }}
-            />
-          </div>
-        </div>
-      ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

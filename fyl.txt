@@ -1,0 +1,106 @@
+Codebase Analysis Steps:
+
+1. Project Structure Analysis:
+- Next.js project with TypeScript setup
+- Uses Tailwind CSS for styling
+- Has components/, app/, utils/ directories following Next.js conventions
+- Contains proper TypeScript configuration (tsconfig.json)
+
+2. Dependencies Overview:
+- Built with Next.js 14.2.3
+- React 18 as the core framework
+- Uses Hume AI voice-react package (@humeai/voice-react)
+- UI components from Radix UI
+- Animation with Framer Motion
+- Styling with Tailwind CSS
+- TypeScript for type safety
+
+3. Key Features:
+- Voice-related functionality (based on Hume AI integration)
+- Modern UI components with Radix UI
+- Responsive design with Tailwind
+- Type-safe development with TypeScript
+
+4. Development Setup:
+- Development server: npm run dev
+- Build: npm run build
+- Start: npm run start
+- Linting: npm run lint
+
+5. App Directory Structure:
+- layout.tsx: Root layout component
+- page.tsx: Main page component
+- globals.css: Global styles
+- error.tsx: Error handling component
+- favicon.ico: Site favicon
+
+6. Components Structure:
+Main Components:
+- Nav.tsx: Navigation component
+- MicFFT.tsx: Microphone/audio visualization component
+- Controls.tsx: UI controls component
+- Expressions.tsx: Likely handles emotion/expression display
+- Messages.tsx: Message display component
+- Chat.tsx: Chat interface component
+- SplineViewer.tsx: 3D model viewer component
+
+Subdirectories:
+- ui/: Contains reusable UI components
+- logos/: Contains logo assets
+
+7. Recent UI Updates:
+New Components Added:
+- GlowingOrb.tsx: Animated glowing orb visualization for voice activity
+- ConversationPrompts.tsx: Pre-defined conversation prompt buttons
+- SplineViewer.tsx: Interactive 3D model viewer
+
+Chat.tsx Updates:
+- Implemented dark theme with black background
+- Added glowing green orb animation
+- Added conversation prompts
+- Implemented voice recording controls
+- Added text input with send button
+- Added Hume AI attribution in footer
+- Replaced StartCall with Spline 3D viewer
+
+Design Features:
+- Clean, minimal dark interface
+- Animated glowing orb for voice feedback
+- Responsive layout with max-width containers
+- Floating mic button and text input
+- Pre-defined conversation prompts
+- Clear visual feedback for voice activity
+- Centered 3D model at bottom of screen 
+
+8. Spline Integration Updates:
+- Removed built-in spline-viewer tag
+- Implemented custom Spline viewer using @splinetool/runtime
+- Added canvas-based rendering for better performance
+- Maintained centered positioning at bottom of screen
+- Added proper cleanup on component unmount
+
+Recent Changes (Latest):
+
+1. Chat Drawer Implementation:
+- Moved Messages component from Chat.tsx to ChatDrawer
+- Implemented proper Sheet component for drawer functionality
+- Added VoiceProvider context in drawer for message functionality
+- Made drawer responsive with proper width and scrolling
+
+2. Expression Animations:
+- Added Framer Motion for smooth transitions
+- Implemented fade animations between expression updates
+- Added AnimatePresence for proper exit animations
+- Used key-based re-rendering for smooth transitions
+
+3. Chat.tsx Updates:
+- Removed Messages component from main chat view
+- Added ChatDrawer to Nav component
+- Simplified main chat layout
+- Maintained voice control functionality
+
+These changes improve the UX by:
+- Moving chat history to an accessible drawer
+- Adding smooth transitions for expression updates
+- Maintaining core voice functionality
+- Better organizing the UI components

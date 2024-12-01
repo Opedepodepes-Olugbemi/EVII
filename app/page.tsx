@@ -1,20 +1,25 @@
-import { getHumeAccessToken } from "@/utils/getHumeAccessToken";
-import dynamic from "next/dynamic";
+"use client";
 
-const Chat = dynamic(() => import("@/components/Chat"), {
-  ssr: false,
-});
+import { SplineViewer } from "@/components/SplineViewer";
+import { Nav } from "@/components/Nav";
+import { Footer } from "@/components/Footer";
+import { VoiceCommand } from "@/components/VoiceCommand";
+import { useRouter } from "next/navigation";
 
-export default async function Page() {
-  const accessToken = await getHumeAccessToken();
-
-  if (!accessToken) {
-    throw new Error();
-  }
+export default function Page() {
+  const router = useRouter();
 
   return (
-    <div className={"grow flex flex-col"}>
-      <Chat accessToken={accessToken} />
+    <div className="relative h-screen w-full">
+      <SplineViewer />
+      <Nav />
+      <VoiceCommand 
+        onWakeWord={() => {
+          router.push("/chat");
+        }}
+        isCallActive={false}
+      />
+      <Footer />
     </div>
   );
 }

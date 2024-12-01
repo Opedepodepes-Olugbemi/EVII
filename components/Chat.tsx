@@ -1,10 +1,13 @@
 "use client";
 
 import { VoiceProvider } from "@humeai/voice-react";
-import Messages from "./Messages";
 import Controls from "./Controls";
-import StartCall from "./StartCall";
-import { ComponentRef, useRef } from "react";
+import { useRef, useState } from "react";
+import { SplineViewer } from "./SplineViewer";
+import { Footer } from "./Footer";
+import { Nav } from "./Nav";
+import { VoiceCommand } from "./VoiceCommand";
+import Expressions from "./Expressions";
 
 export default function ClientComponent({
   accessToken,
@@ -12,41 +15,39 @@ export default function ClientComponent({
   accessToken: string;
 }) {
   const timeout = useRef<number | null>(null);
-  const ref = useRef<ComponentRef<typeof Messages> | null>(null);
-
-  // optional: use configId from environment variable
   const configId = process.env['NEXT_PUBLIC_HUME_CONFIG_ID'];
+  const [isCallEnabled, setIsCallEnabled] = useState(false);
+  const [isCallActive, setIsCallActive] = useState(false);
   
   return (
-    <div
-      className={
-        "relative grow flex flex-col mx-auto w-full overflow-hidden h-[0px]"
-      }
-    >
+    <div className="relative h-screen w-full">
+      <SplineViewer />
+      <Nav accessToken={accessToken}>
+        {/* <ChatDrawer accessToken={accessToken} /> */}
+      </Nav>
+      <VoiceCommand 
+        onWakeWord={() => setIsCallEnabled(true)}
+        isCallActive={isCallActive}
+      />
       <VoiceProvider
         auth={{ type: "accessToken", value: accessToken }}
         configId={configId}
-        onMessage={() => {
-          if (timeout.current) {
-            window.clearTimeout(timeout.current);
-          }
-
-          timeout.current = window.setTimeout(() => {
-            if (ref.current) {
-              const scrollHeight = ref.current.scrollHeight;
-
-              ref.current.scrollTo({
-                top: scrollHeight,
-                behavior: "smooth",
-              });
-            }
-          }, 200);
-        }}
       >
-        <Messages ref={ref} />
-        <Controls />
-        <StartCall />
+        <div className="absolute inset-0 z-10 flex flex-col pointer-events-none">
+          <div className="p-4 mt-auto pointer-events-auto">
+            <Controls 
+              onStopListening={() => {
+                setIsCallActive(false);
+                setIsCallEnabled(false);
+              }}
+              isEnabled={isCallEnabled}
+              onStartListening={() => setIsCallActive(true)}
+            />
+          </div>
+        </div>
+        <Expressions />
       </VoiceProvider>
+      <Footer />
     </div>
   );
 }
