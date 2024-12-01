@@ -3,11 +3,12 @@ import { useVoice } from "@humeai/voice-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ComponentRef, forwardRef, useState, useEffect, useRef } from "react";
 import Expressions from "./Expressions";
+import type { EmotionScores } from "hume/api/resources/empathicVoice/types";
 
 interface VisibleMessage {
   content: string;
   id: string;
-  expressions?: Record<string, number>;
+  expressions: Record<string, number>;
   shouldShow: boolean;
 }
 
@@ -23,21 +24,20 @@ const Messages = forwardRef<
     const assistantMessages = messages.filter(msg => msg.type === "assistant_message");
     const latestMessage = assistantMessages[assistantMessages.length - 1];
 
-    if (latestMessage && latestMessage.message.content) {
+    if (latestMessage?.message?.content) {
       const newMessageId = latestMessage.type + messages.length;
+      const scores = (latestMessage.models.prosody?.scores || {}) as Record<string, number>;
       
-      if (timersRef.current.has(newMessageId)) {
-        clearTimeout(timersRef.current.get(newMessageId));
-      }
+      const newMessage: VisibleMessage = {
+        content: latestMessage.message.content,
+        id: newMessageId,
+        expressions: scores,
+        shouldShow: true
+      };
 
       setVisibleMessages(prev => [
         ...prev.map(msg => ({ ...msg, shouldShow: false })),
-        {
-          content: latestMessage.message.content,
-          id: newMessageId,
-          expressions: latestMessage.models.prosody?.scores || {},
-          shouldShow: true
-        }
+        newMessage
       ]);
 
       const timer = setTimeout(() => {
