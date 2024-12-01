@@ -32,22 +32,21 @@ const Messages = forwardRef<
       clearTimeout(timersRef.current.get(newMessageId));
     }
 
-    // Create new message with fallback for content
+    // Create new message with explicit type safety
     const newMessage: VisibleMessage = {
-      content: latestMessage.message.content || "", // Ensuring content is always a string
+      content: latestMessage.message.content,
       id: newMessageId,
-      expressions: (latestMessage.models.prosody?.scores || {}) as Record<string, number>,
+      expressions: (latestMessage.models?.prosody?.scores ?? {}) as Record<string, number>,
       shouldShow: true
     };
 
-    // Hide previous messages
-    const oldMessages = visibleMessages.map(msg => ({
-      ...msg,
-      shouldShow: false
-    }));
-
-    // Update state with type safety
-    setVisibleMessages([...oldMessages, newMessage]);
+    setVisibleMessages(prev => {
+      const updatedOldMessages = prev.map(msg => ({
+        ...msg,
+        shouldShow: false
+      }));
+      return [...updatedOldMessages, newMessage];
+    });
 
     // Set timer to hide new message
     const timer = setTimeout(() => {

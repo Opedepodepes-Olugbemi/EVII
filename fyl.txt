@@ -104,3 +104,21 @@ These changes improve the UX by:
 - Adding smooth transitions for expression updates
 - Maintaining core voice functionality
 - Better organizing the UI components
+
+Latest fix for Vercel deployment error (TypeScript type error in Messages.tsx):
+
+1. Fixed type safety issues in Messages.tsx
+2. Improved null checking for message content
+3. Used proper type assertions for expressions
+4. Simplified state updates with proper typing
+5. Used nullish coalescing operator for safer fallbacks
+6. Restructured the message update logic for better type inference
+
+The changes ensure that:
+- content is always a string as required by VisibleMessage interface
+- expressions are properly typed as Record<string, number>
+- State updates maintain type safety throughout the component
+
+Latest fix - Type assertion for expressions:
+1. Added type assertion to convert EmotionScores to Record<string, number>
+2. Used fallback empty object with type assertion for null/undefined cases
